@@ -133,3 +133,19 @@ InputManager:
     type: 0
     axis: 9
     joyNum: 10
+  - serializedVersion: 3
+    m_Name: Interact
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 2
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.001
+    sensitivity: 1
+    snap: 1
+    invert: 0
+    type: 0
+    axis: 9
+    joyNum: 2

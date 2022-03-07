@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
     private GameObject camera_holder;
     private GameData game_data;
 
+    //Refrences
+    public List<GameObject> overlapping_go;
+
     void Start()
     {
         main_camera = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -52,11 +55,55 @@ public class PlayerController : MonoBehaviour
         updateVerticleMovement();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<PowerUpSpeed>() != null)
+        {
+            //do not add!
+            return;
+        }
+        //add to refrence to manage overlapping gmae objects
+        overlapping_go.Add(other.gameObject);
+
+        if (other.gameObject.GetComponent<DoorScript>() != null)
+        {
+            //if has door script enable in range
+            print("Enter");
+            other.gameObject.GetComponent<DoorScript>().player_in_range = true;
+        }
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.GetComponent<DoorScript>() != null)
+        {
+            print("Leave");
+            other.gameObject.GetComponent<DoorScript>().player_in_range = false;
+        }
+        overlapping_go.Remove(other.gameObject);
+    }
+
+    private void interact()
+    {
+        foreach(GameObject x in overlapping_go)
+        {
+            print(x);
+            if(x.GetComponent<DoorScript>() != null)
+            {
+                x.GetComponent<DoorScript>().tiggerDoor();
+            }
+        }
+    }
+
     private void FixedUpdate()
     {
         update_movement();
         if(!in_air)
             attack();
+
+        if (Input.GetButton("Interact"))
+            interact();
 
         if (jump_timer <= 0)
         {
