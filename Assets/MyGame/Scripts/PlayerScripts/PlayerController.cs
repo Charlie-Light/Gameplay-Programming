@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
 
     //input vars
     private float horizontal_axis = 0.0f; private float vertical_axis = 0.0f;
-    private float camera_vert_axis = 0.0f; private float camera_hor_axis = 0.0f;
     private float attackL; private float attackR;
     private bool sprint = false;
 
@@ -26,16 +25,16 @@ public class PlayerController : MonoBehaviour
     //objects attached to character
     private Animator animation_handeler;
     private Rigidbody rb;
-    private Camera main_camera;
+    public GameObject main_camera;
     private GameObject camera_holder;
     private GameData game_data;
 
+    private CameraController player_cam_controller;
     //Refrences
     public List<GameObject> overlapping_go;
 
     void Start()
     {
-        main_camera = GameObject.Find("Main Camera").GetComponent<Camera>();
         camera_holder = GameObject.Find("CameraCentre");
         animation_handeler = GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody>();
@@ -43,6 +42,8 @@ public class PlayerController : MonoBehaviour
         power_up = gameObject.transform.Find("Player_speed_particle").GetComponent<ParticleSystem>();
 
         Physics.gravity = new Vector3(0, -10, 0);
+        player_cam_controller = new CameraController();
+        player_cam_controller.InitilizeCameraController(camera_speed_mod, dead_zone, main_camera, this);
     }
 
     // Update is called once per frame
@@ -53,6 +54,11 @@ public class PlayerController : MonoBehaviour
             current_attack_cooldown -= Time.deltaTime;
         }
         updateVerticleMovement();
+    }
+
+    private void LateUpdate()
+    {
+        player_cam_controller.LateUpdate();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -98,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         update_movement();
         if(!in_air)
             attack();
@@ -207,18 +214,14 @@ public class PlayerController : MonoBehaviour
     {
         horizontal_axis = Input.GetAxis("Horizontal");
         vertical_axis = Input.GetAxis("Vertical");
-        camera_hor_axis = Input.GetAxis("Camera_horizontal");
-        camera_vert_axis = Input.GetAxis("Camera_verticle");
+        float camera_hor_axis = Input.GetAxis("Camera_horizontal");
+
         sprint = Input.GetButton("Sprint");
 
         if (Math.Abs(horizontal_axis) < dead_zone)
             horizontal_axis = 0;
         if (Math.Abs(vertical_axis) < dead_zone)
             vertical_axis = 0;
-        if (Math.Abs(camera_hor_axis) < dead_zone)
-            camera_hor_axis = 0;
-        if (Math.Abs(camera_vert_axis) < dead_zone)
-            camera_vert_axis = 0;
 
         animation_handeler.SetFloat("Strafe", horizontal_axis);
         animation_handeler.SetFloat("Forward", vertical_axis);
@@ -237,25 +240,15 @@ public class PlayerController : MonoBehaviour
             transform.Translate(new Vector3(horizontal_axis, 0, vertical_axis) * speed_modifier * Time.deltaTime);
         }
 
-        if(Math.Abs(camera_hor_axis) > 0)
+        if (Math.Abs(rb.velocity.x) > 0 || Math.Abs(rb.velocity.z) > 0)
         {
+            if (Math.Abs(camera_hor_axis) > dead_zone)
                 transform.Rotate(new Vector3(0, camera_hor_axis, 0) * (camera_speed_mod) * Time.deltaTime);
+            player_cam_controller.UpdateCameraMovementHorz(false);
         }
-
-        if(Math.Abs(camera_vert_axis) > 0)
+        else
         {
-            if (camera_holder.transform.localRotation.x > -0.2 && camera_holder.transform.localRotation.x < 0.5)
-            {
-                camera_holder.transform.Rotate(new Vector3(camera_vert_axis, 0, 0) * (camera_speed_mod) * Time.deltaTime);
-            }
-            else if(camera_holder.transform.localRotation.x < -0.2)
-            {
-                camera_holder.transform.Rotate(new Vector3(0.06f, 0, 0) * (camera_speed_mod) * Time.deltaTime);
-            }
-            else if(camera_holder.transform.localRotation.x > 0.5)
-            {
-                camera_holder.transform.Rotate(new Vector3(-0.06f, 0, 0) * (camera_speed_mod) * Time.deltaTime);
-            }
+            player_cam_controller.UpdateCameraMovementHorz(true);
         }
     }
 
