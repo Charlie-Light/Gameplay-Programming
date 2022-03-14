@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour
     public void LateUpdate()
     {
         UpdateCameraMovementInputVert();
-        print("Camera Rot: " + verticle_movement.transform.eulerAngles);
+        //print("Camera Rot: " + verticle_movement.transform.eulerAngles);
     }
 
     private void UpdateCameraMovementInputVert()

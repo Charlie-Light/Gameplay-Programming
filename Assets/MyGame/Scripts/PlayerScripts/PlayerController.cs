@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
         game_data = GameObject.Find("GameManager").GetComponent<GameData>();
         power_up = gameObject.transform.Find("Player_speed_particle").GetComponent<ParticleSystem>();
 
-        Physics.gravity = new Vector3(0, -10, 0);
+        Physics.gravity = new Vector3(0, -20, 0);
         player_cam_controller = new CameraController();
         player_cam_controller.InitilizeCameraController(camera_speed_mod, dead_zone, main_camera, this);
     }
@@ -116,7 +116,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetButton("Jump") && jump_count < game_data.jump_count)
             {
-                jump_timer = 1f;
+                jump_timer = 0.5f;
                 Jump();
             }
             else if(IsGrounded())

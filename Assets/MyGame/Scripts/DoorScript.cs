@@ -47,25 +47,20 @@ public class DoorScript : MonoBehaviour
 
             case DoorStates.moving_button:
                 //door is moving
-                if(button.transform.localPosition != button_stop_vec)
-                {
-                    button.transform.Translate(button_move_dir);
-                }
-                else
+                button.transform.Translate(button_move_dir);
+                if(AlmostEqual(button.transform.localPosition, button_stop_vec))
                 {
                     currnet_door_state = DoorStates.move_door;
                 }
+
 
                 print(button.transform.position);
                 break;
 
             case DoorStates.move_door:
                 //door is opening
-                if (door.transform.localPosition != door_stop_vec)
-                {
-                    door.transform.Translate(door_move_dir);
-                }
-                else
+                door.transform.Translate(door_move_dir);
+                if(AlmostEqual(door_stop_vec, door.transform.localPosition))
                 {
                     currnet_door_state = DoorStates.open;
                 }
@@ -84,5 +79,14 @@ public class DoorScript : MonoBehaviour
             //open door
             currnet_door_state = DoorStates.moving_button;
         }
+    }
+
+    private bool AlmostEqual(Vector3 v1, Vector3 v2)
+    {
+        if (Mathf.Abs(v1.x - v2.x) > 0.1) return false;
+        if (Mathf.Abs(v1.y - v2.y) > 0.1) return false;
+        if (Mathf.Abs(v1.z - v2.z) > 0.1) return false;
+
+        return true;
     }
 }

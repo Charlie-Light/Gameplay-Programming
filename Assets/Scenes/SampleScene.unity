@@ -1860,7 +1860,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257219910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.26, y: 4.07, z: -17.06}
+  m_LocalPosition: {x: -29, y: 4, z: -17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1801614400}
@@ -1895,10 +1895,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player_in_range: 0
   button_move_dir: {x: -0.01, y: 0, z: 0}
-  button_stop_vec: {x: 0.6, y: 1.552, z: 2.51}
+  button_stop_vec: {x: 0.2, y: 1.5, z: 1.8}
   button: {fileID: 1801614399}
-  door_move_dir: {x: 0, y: 0, z: 0.01}
-  door_stop_vec: {x: 0.3, y: 1.4029999, z: 2.5}
+  door_move_dir: {x: 0, y: 0, z: -0.01}
+  door_stop_vec: {x: 0.06, y: 1.4, z: -3.5}
   door: {fileID: 1594264704}
 --- !u!1 &1325781790
 GameObject:
@@ -2360,8 +2360,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594264704}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.32900047, y: 1.4029999, z: -0.4470005}
-  m_LocalScale: {x: 1, y: 3.6195624, z: 2.8833299}
+  m_LocalPosition: {x: 0.06, y: 1.4, z: -0.5}
+  m_LocalScale: {x: 1, y: 3.6, z: 2.9}
   m_Children: []
   m_Father: {fileID: 1257219911}
   m_RootOrder: 1
@@ -3130,8 +3130,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1801614399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 1.552, z: 2.51}
-  m_LocalScale: {x: 0.4027871, y: 1, z: 1}
+  m_LocalPosition: {x: 0.6, y: 1.5, z: 1.8}
+  m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1257219911}
   m_RootOrder: 0
