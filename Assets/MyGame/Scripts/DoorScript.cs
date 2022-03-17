@@ -23,6 +23,7 @@ public class DoorScript : MonoBehaviour
     public Vector3 door_move_dir;
     public Vector3 door_stop_vec;
     public GameObject door;
+    public FocusCameraScript cutscene_camera;
 
     // Start is called before the first frame update
     void Start()
@@ -52,9 +53,6 @@ public class DoorScript : MonoBehaviour
                 {
                     currnet_door_state = DoorStates.move_door;
                 }
-
-
-                print(button.transform.position);
                 break;
 
             case DoorStates.move_door:
@@ -78,6 +76,7 @@ public class DoorScript : MonoBehaviour
         {
             //open door
             currnet_door_state = DoorStates.moving_button;
+            cutscene_camera.StartTracking();
         }
     }
 

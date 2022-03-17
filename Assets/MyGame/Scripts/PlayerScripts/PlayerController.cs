@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private float attackL; private float attackR;
     private bool sprint = false;
 
+    public bool camera_input_enabled = true; public bool player_input_enabled = true;
+
     //movement / attack vars
     public float speed_modifier = 10.0f; public float camera_speed_mod = 20.0f;
     public float dead_zone = 0.1f;
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private float distance_to_ground;
     private int jump_count = 0; private float jump_timer;
     ParticleSystem power_up;
+    public float camera_dist = 1.0f;
 
     //objects attached to character
     private Animator animation_handeler;
@@ -43,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
         Physics.gravity = new Vector3(0, -20, 0);
         player_cam_controller = new CameraController();
-        player_cam_controller.InitilizeCameraController(camera_speed_mod, dead_zone, main_camera, this);
+        player_cam_controller.InitilizeCameraController(camera_speed_mod, dead_zone, main_camera, this, camera_dist);
     }
 
     // Update is called once per frame
@@ -53,12 +56,46 @@ public class PlayerController : MonoBehaviour
         {
             current_attack_cooldown -= Time.deltaTime;
         }
-        updateVerticleMovement();
+        if(camera_input_enabled)
+            updateVerticleMovement();
+    }
+
+    private void FixedUpdate()
+    {
+        if(player_input_enabled)
+        {
+            update_movement();
+
+            if (!in_air)
+                attack();
+            if (Input.GetButton("Interact"))
+                interact();
+
+            if (jump_timer <= 0)
+            {
+                if (Input.GetButton("Jump") && jump_count < game_data.jump_count)
+                {
+                    jump_timer = 0.5f;
+                    Jump();
+                }
+                else if (IsGrounded())
+                {
+                    jump_count = 0;
+                }
+            }
+            else
+            {
+                jump_timer -= Time.deltaTime;
+            }
+        }
     }
 
     private void LateUpdate()
     {
-        player_cam_controller.LateUpdate();
+        if (camera_input_enabled)
+        {
+            player_cam_controller.LateUpdate();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -99,34 +136,6 @@ public class PlayerController : MonoBehaviour
             {
                 x.GetComponent<DoorScript>().tiggerDoor();
             }
-        }
-    }
-
-    private void FixedUpdate()
-    {
-
-        update_movement();
-        if(!in_air)
-            attack();
-
-        if (Input.GetButton("Interact"))
-            interact();
-
-        if (jump_timer <= 0)
-        {
-            if (Input.GetButton("Jump") && jump_count < game_data.jump_count)
-            {
-                jump_timer = 0.5f;
-                Jump();
-            }
-            else if(IsGrounded())
-            {
-                jump_count = 0;
-            }
-        }
-        else
-        {
-            jump_timer -= Time.deltaTime;
         }
     }
 
