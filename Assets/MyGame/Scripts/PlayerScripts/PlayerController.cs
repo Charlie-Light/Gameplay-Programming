@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private float attackL; private float attackR;
     private bool sprint = false;
 
-    public bool camera_input_enabled = true; public bool player_input_enabled = true;
+    public bool camera_input_enabled = true; public bool player_input_vert_enabled = true; public bool player_input_horz_enabled = true; 
 
     //movement / attack vars
     public float speed_modifier = 10.0f; public float camera_speed_mod = 20.0f;
@@ -56,14 +56,11 @@ public class PlayerController : MonoBehaviour
         {
             current_attack_cooldown -= Time.deltaTime;
         }
-        if(camera_input_enabled)
-            updateVerticleMovement();
+        updateVerticleMovement();
     }
 
     private void FixedUpdate()
     {
-        if(player_input_enabled)
-        {
             update_movement();
 
             if (!in_air)
@@ -71,22 +68,21 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButton("Interact"))
                 interact();
 
-            if (jump_timer <= 0)
+        if (jump_timer <= 0)
+        {
+            if (Input.GetButton("Jump") && jump_count < game_data.jump_count)
             {
-                if (Input.GetButton("Jump") && jump_count < game_data.jump_count)
-                {
-                    jump_timer = 0.5f;
-                    Jump();
-                }
-                else if (IsGrounded())
-                {
-                    jump_count = 0;
-                }
+                jump_timer = 0.25f;
+                Jump();
             }
-            else
+            else if (IsGrounded())
             {
-                jump_timer -= Time.deltaTime;
+                jump_count = 0;
             }
+        }
+        else
+        {
+            jump_timer -= Time.deltaTime;
         }
     }
 
@@ -111,7 +107,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.GetComponent<DoorScript>() != null)
         {
             //if has door script enable in range
-            print("Enter");
+            //print("Enter");
             other.gameObject.GetComponent<DoorScript>().player_in_range = true;
         }
 
@@ -121,7 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.GetComponent<DoorScript>() != null)
         {
-            print("Leave");
+            //print("Leave");
             other.gameObject.GetComponent<DoorScript>().player_in_range = false;
         }
         overlapping_go.Remove(other.gameObject);
@@ -131,7 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach(GameObject x in overlapping_go)
         {
-            print(x);
+            //print(x);
             if(x.GetComponent<DoorScript>() != null)
             {
                 x.GetComponent<DoorScript>().tiggerDoor();
@@ -227,9 +223,9 @@ public class PlayerController : MonoBehaviour
 
         sprint = Input.GetButton("Sprint");
 
-        if (Math.Abs(horizontal_axis) < dead_zone)
+        if ((Math.Abs(horizontal_axis) < dead_zone) || !player_input_horz_enabled )
             horizontal_axis = 0;
-        if (Math.Abs(vertical_axis) < dead_zone)
+        if ((Math.Abs(vertical_axis) < dead_zone) || !player_input_vert_enabled)
             vertical_axis = 0;
 
         animation_handeler.SetFloat("Strafe", horizontal_axis);

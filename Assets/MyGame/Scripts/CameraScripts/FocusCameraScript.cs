@@ -23,6 +23,7 @@ public class FocusCameraScript : MonoBehaviour
         change_camera = false;
         this_cam = this.GetComponent<Camera>();
         movement_contoller = GetComponent<ObectMovementScript>();
+        this_cam.enabled = false;
     }
 
     // Update is called once per frame
@@ -41,7 +42,8 @@ public class FocusCameraScript : MonoBehaviour
 
                 if(disable_input)
                 {
-                    //player_character.player_input_enabled = false;
+                    player_character.player_input_vert_enabled = false;
+                    player_character.player_input_horz_enabled = false;
                     player_character.camera_input_enabled = false;
                 }
             }
@@ -58,7 +60,8 @@ public class FocusCameraScript : MonoBehaviour
                 this_cam.enabled = false;
                 player_cam.enabled = true;
 
-                player_character.player_input_enabled = true;
+                player_character.player_input_vert_enabled = true;
+                player_character.player_input_horz_enabled = true;
                 player_character.camera_input_enabled = true;
                 movement_contoller.is_active = false;
             }
