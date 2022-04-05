@@ -9,17 +9,17 @@ public class ObectMovementScript : MonoBehaviour
 
     public bool is_active = false;
     public bool loop = false;
+    public bool teleport_to_start = false;
     public float speed_mod;
 
     private bool reverse = false;
     private bool move_to_next_point = true;
-    private int current_point;
+    public int current_point;
 
 
     void Start()
     {
-        movement_points[0] = this.transform.localPosition;
-        current_point = 1;
+       // movement_points[0] = this.transform.localPosition;
     }
 
     // Update is called once per frame
@@ -27,10 +27,6 @@ public class ObectMovementScript : MonoBehaviour
     {
         if(is_active)
         {
-            print(current_point);
-            print(this.transform.localPosition);
-            print(movement_points[current_point]);
-
             if(move_to_next_point)
             {
                 updateMovement();
@@ -56,7 +52,15 @@ public class ObectMovementScript : MonoBehaviour
                 //is reverseing
                 if (current_point == 0)
                 {
-                    reverse = false;
+                    if (teleport_to_start)
+                    {
+                        current_point = 0;
+                        transform.localPosition = movement_points[0];
+                    }
+                    else
+                    {
+                        reverse = false;
+                    }
                 }
                 else
                 {
@@ -70,7 +74,16 @@ public class ObectMovementScript : MonoBehaviour
                 {
                     if (loop)
                     {
-                        reverse = true;
+                        if(teleport_to_start)
+                        {
+                            current_point = 0;
+                            transform.localPosition = movement_points[0];
+                        }
+                        else
+                        {
+                            reverse = true;
+                        }
+                        
                     }
                     else
                     {
